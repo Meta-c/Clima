@@ -76,3 +76,7 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
+
+
+//  var long = jsonDecode(data)['city']['coord']['lon'];
+//       var name = jsonDecode(data)['city']['name'];
