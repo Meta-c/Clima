@@ -67,7 +67,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     onPressed: () {},
                     child: Icon(
                       Icons.location_city,
-                      size: 40.0,
+                      size: 50.0,
                     ),
                   ),
                 ],
