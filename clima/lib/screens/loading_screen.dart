@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:clima/Location.dart';
-import 'package:http/http.dart';
-import 'dart:convert';
+import 'package:clima/networking.dart';
+import 'location_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -10,61 +11,56 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  // late double longitude;
+  // late double latitude;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getLocation();
+    getLocationData();
   }
 
   void getLocation() async {
     print('pressed');
     Location location = Location();
-    location.getCurrentLocation();
+
     //print(position);
-    getData();
+    getLocationData();
   }
 
-  void getData() async {
-    double longitude;
-    double latitude;
+  void getLocationData() async {
     Location location = Location();
-    latitude = location.getLatitude();
-    longitude = location.getLongitude();
+    await location.getCurrentLocation();
+    // latitude = location.getLatitude();
+    // longitude = location.getLongitude();
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://api.openweathermap.org/data/2.5/forecast?lat=${location.getLatitude()}&lon=${location.getLongitude()}&appid=970b044b235762e719343872e7839150&units=metric');
 
-    Response response = await get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/forecast?lat=30.0444&lon=31.2357&appid=970b044b235762e719343872e7839150'));
+    var weatherData = await networkHelper.getData();
 
-    if (response.statusCode == 200) {
-      String data = response.body;
-      var long = jsonDecode(data)['city']['coord']['lon'];
-      var name = jsonDecode(data)['city']['name'];
-      print(long);
-      print(name);
-    } else {
-      print(response.statusCode);
-    }
+    // ignore: use_build_context_synchronously
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen(
+        locationWeather: weatherData,
+      );
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    String myMargin = '15';
-    try {
-      double myMarginAsADouble = double.parse(myMargin);
-      return Scaffold(
-        body: Container(
-          margin: EdgeInsets.all(double.parse(myMargin)),
-          color: Colors.red,
-        ),
-      );
-    } catch (e) {
-      print(e);
-      return Scaffold(
-        body: Container(
-          margin: EdgeInsets.all(30),
-          color: Colors.black,
-        ),
-      );
-    }
+    return Scaffold(
+      body: Center(
+          child: SpinKitDoubleBounce(
+        color: Colors.white,
+        size: 100,
+      )),
+    );
   }
 }
+
+
+
+
+
+// egy long = 31.2357        lat = 30.0444
