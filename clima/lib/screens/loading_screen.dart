@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:clima/Location.dart';
-import 'package:clima/networking.dart';
-import 'location_screen.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -10,38 +10,40 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  late double longitude;
-  late double latitude;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getLocationData();
+    getLocation();
   }
 
   void getLocation() async {
     print('pressed');
     Location location = Location();
-
+    location.getCurrentLocation();
     //print(position);
-    getLocationData();
+    getData();
   }
 
-  void getLocationData() async {
+  void getData() async {
+    double longitude;
+    double latitude;
     Location location = Location();
-    await location.getCurrentLocation();
     latitude = location.getLatitude();
     longitude = location.getLongitude();
-    NetworkHelper networkHelper = NetworkHelper(
-        'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&appid=970b044b235762e719343872e7839150');
 
-    var weatherData = await networkHelper.getData();
+    Response response = await get(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/forecast?lat=30.0444&lon=31.2357&appid=970b044b235762e719343872e7839150'));
 
-    // ignore: use_build_context_synchronously
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return LocationScreen();
-    }));
+    if (response.statusCode == 200) {
+      String data = response.body;
+      var long = jsonDecode(data)['city']['coord']['lon'];
+      var name = jsonDecode(data)['city']['name'];
+      print(long);
+      print(name);
+    } else {
+      print(response.statusCode);
+    }
   }
 
   @override
@@ -66,8 +68,3 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 }
-
-
-
-
-// egy long = 31.2357        lat = 30.0444
