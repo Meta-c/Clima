@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:clima/Location.dart';
-import 'package:clima/networking.dart';
 import 'location_screen.dart';
+import 'package:clima/services/weather.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -21,24 +19,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
     getLocationData();
   }
 
-  void getLocation() async {
-    print('pressed');
-    Location location = Location();
+  // void getLocation() async {
+  //   print('pressed');
+  //   Location location = Location();
 
-    //print(position);
-    getLocationData();
-  }
+  //   //print(position);
+  //   getLocationData();
+  // }
 
   void getLocationData() async {
-    Location location = Location();
-    await location.getCurrentLocation();
-    // latitude = location.getLatitude();
-    // longitude = location.getLongitude();
-    NetworkHelper networkHelper = NetworkHelper(
-        'https://api.openweathermap.org/data/2.5/forecast?lat=${location.getLatitude()}&lon=${location.getLongitude()}&appid=970b044b235762e719343872e7839150&units=metric');
-
-    var weatherData = await networkHelper.getData();
-
+    WeatherModel locationWeather = WeatherModel();
+    var weatherData = await locationWeather.getLocationWeather();
     // ignore: use_build_context_synchronously
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return LocationScreen(
@@ -49,7 +40,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
           child: SpinKitDoubleBounce(
         color: Colors.white,
