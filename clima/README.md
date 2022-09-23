@@ -1,16 +1,11 @@
 # clima
 
-A new Flutter project.
+A Weather App.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Clima is an Application programmed using Flutter with beautiful UI interface
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![Screenshot (584)](https://user-images.githubusercontent.com/89762132/192003504-0c1295ed-960f-4fa6-82c1-e775e1240377.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
